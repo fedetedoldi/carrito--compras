@@ -1,0 +1,14 @@
+.imgSize {
+    width: 12rem;
+    height: 16rem;
+    object-fit: contain;
+    margin-top: 1rem;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem;
+}
+
+
