@@ -1,34 +1,56 @@
+/* TIENDA DE BEBIDAS ONLINE */
+
+class Bebida {
+    constructor(id, nombre, precio, imagen) {
+        this.id = id;
+        this.nombre = nombre;
+        this.precio = precio;
+        this.imagen = imagen;
+        this.cantidad = 1;
+    }
+}
+
+/* CATÁLOGO */
+const vinoTinto = new Bebida(1, "Vino Tinto", 1200, "recursos/tinto.jpg");
+const vinoBlanco = new Bebida(2, "Vino Blanco", 900, "recursos/blanco.jpg");
+const vinoRosado = new Bebida(3, "Vino Rosado", 750, "recursos/rosado.jpg");
+const cerveza = new Bebida(4, "Cerveza", 220, "recursos/cerveza.jpg");
+const gin = new Bebida(5, "Gin", 3400, "recursos/gin.jpg");
+const vodka = new Bebida(6, "Vodka", 2100, "recursos/vodka.jpg");
+const campari = new Bebida(7, "Campari", 1500, "recursos/campari.jpg");
+const ron = new Bebida(8, "Ron", 3000, "recursos/ron.jpg");
+
+/* ARRAY DEL CATÁLOGO */
+const bebidas = [vinoTinto, vinoBlanco, vinoRosado, cerveza, gin, vodka, campari, ron];
+
+/* ARRAY DEL CARRITO */
+let carritoCompras = [];
+if(localStorage.getItem("carritoCompras")) {
+    carritoCompras = JSON.parse(localStorage.getItem("carritoCompras"));
+}
+
+//Modificación del DOM
 const contenedorBebidas = document.getElementById("contenedorBebidas");
-const listadoBebidas = "json/productos.json";
 
-const bebidas = [];
-
-fetch(listadoBebidas)
-    .then((respuesta) => respuesta.json())
-    .then((datos) => {
-        datos.forEach((bebida) => {
-            bebidas.push(bebida);
-        });
-    })
-    .catch((error) => console.log(error))
-    .finally(() => {
-        bebidas.forEach((bebida) => {
-            const card = document.createElement("div");
-            card.classList.add("col-xl-3", "col-md-6", "col-xs-12");
-            card.innerHTML = `
-                <div class="card text-center">
-                    <img src="${bebida.imagen}" class="card-img-top imgSize img-thumbnail" alt="${bebida.nombre}">
-                    <div class="card-body">
-                        <h5 class="card-title">${bebida.nombre}</h5>
-                        <p class="card-text">$ ${bebida.precio}</p>
-                        <p class="card-text"> Cantidad: ${bebida.cantidad} </p>
-                        <button class="btn btn-primary" id="boton${bebida.id}">Agregar al carrito</button>
-                    </div>
+//Función para mostrar bebidas
+const mostrarBebidas = () => {
+    bebidas.forEach((bebida) => {
+        const card = document.createElement("div");
+        card.classList.add("col-xl-3", "col-md-6", "col-xs-12");
+        card.innerHTML = `
+            <div class="card text-center">
+                <img src="${bebida.imagen}" class="card-img-top imgSize img-thumbnail" alt="${bebida.nombre}">
+                <div class="card-body">
+                    <h5 class="card-title">${bebida.nombre}</h5>
+                    <p class="card-text">$ ${bebida.precio}</p>
+                    <button class="btn btn-light" id="botonMenos${bebida.id}"> - </button> <span class="card-text"> Cantidad: ${bebida.cantidad} </span> <button class="btn btn-light" id="botonMas${bebida.id}"> + </button>
+                    <button class="btn btn-primary" id="boton${bebida.id}">Agregar al carrito</button>
                 </div>
-            `
-            contenedorBebidas.appendChild(card);
-
-                    //Agregar los productos al carrito
+            </div>
+        `
+        contenedorBebidas.appendChild(card);
+        
+        //Agregar los productos al carrito
         const boton = document.getElementById(`boton${bebida.id}`);
         boton.addEventListener("click", () => {
             Toastify({
@@ -43,8 +65,8 @@ fetch(listadoBebidas)
             }).showToast(),
             agregarAlCarrito(bebida.id)
         })
-        })
     })
+}
 
 //Función para agregar al carrito
 const agregarAlCarrito = (id) => {
@@ -59,22 +81,7 @@ const agregarAlCarrito = (id) => {
     calcularTotal();
 }
 
-/* ARRAY DEL CARRITO */
-let carritoCompras = [];
-if(localStorage.getItem("carritoCompras")) {
-    carritoCompras = JSON.parse(localStorage.getItem("carritoCompras"));
-}
-
-//Total compra + función
-const totalCompra = document.getElementById("total");
-const total = document.getElementById("total");
-const calcularTotal = () => {
-    let totalCompra = 0;
-    carritoCompras.forEach((bebida) => {
-        totalCompra += bebida.precio * bebida.cantidad;
-    })
-    total.innerHTML = `Total= $${totalCompra}`;
-}
+mostrarBebidas();
 
 //Mostrar el carrito
 const contenedorCarrito = document.getElementById("contenedorCarrito");
@@ -113,7 +120,6 @@ const mostrarCarrito = () => {
     calcularTotal();
 }
 
-
 //Función para eliminar del carrito
 const eliminarDelCarrito = (id) => {
     const bebida = carritoCompras.find((bebida) => bebida.id === id);
@@ -150,4 +156,14 @@ const eliminarTodo = () => {
     carritoCompras = [];
     mostrarCarrito();
     localStorage.clear();
+}
+
+//Total compra
+const total = document.getElementById("total");
+const calcularTotal = () => {
+    let totalCompra = 0;
+    carritoCompras.forEach((bebida) => {
+        totalCompra += bebida.precio * bebida.cantidad;
+    })
+    total.innerHTML = `Total= $${totalCompra}`;
 }
