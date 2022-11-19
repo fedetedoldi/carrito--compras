@@ -67,13 +67,12 @@ if(localStorage.getItem("carritoCompras")) {
 
 //Total compra + función
 const totalCompra = document.getElementById("total");
-const total = document.getElementById("total");
 const calcularTotal = () => {
     let totalCompra = 0;
     carritoCompras.forEach((bebida) => {
         totalCompra += bebida.precio * bebida.cantidad;
     })
-    total.innerHTML = `Total= $${totalCompra}`;
+    total.innerHTML = `$${totalCompra}`;
 }
 
 //Mostrar el carrito
@@ -93,7 +92,7 @@ const mostrarCarrito = () => {
         card.classList.add("col-xl-3", "col-md-6", "col-xs-12");
         card.innerHTML = `
             <div class="card">
-                <img src="${bebida.imagen}" class="card-img-top imgSize" alt="${bebida.nombre}">
+                <img src="${bebida.imagen}" class="card-img-top imgSize img-thumbnail" alt="${bebida.nombre}">
                 <div class="card-body">
                     <h5 class="card-title">${bebida.nombre}</h5>
                     <p class="card-text">${bebida.cantidad}</p>
